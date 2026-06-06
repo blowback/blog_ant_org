@@ -189,36 +189,10 @@ ssh root@$BOX 'set -a; . /opt/blog/.env; set +a; \
 ### Restore from a backup
 
 Restores data onto a running (typically freshly-rebuilt) box. Full steps in
-[`deploy/RESTORE.md`](deploy/RESTORE.md). Summary:
+[`deploy/RESTORE.md`](deploy/RESTORE.md). 
 
 ```bash
-ssh root@$BOX
-cd /opt/blog
-set -a; . ./.env; set +a
-
-# 1. Pick & pull a bundle (using the aws-cli container):
-docker run --rm -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_DEFAULT_REGION \
-  -v /tmp:/work amazon/aws-cli s3 cp \
-  "s3://$BACKUP_BUCKET/blog-backup-YYYYMMDDTHHMMSSZ.tar" /work/restore.tar
-mkdir -p /tmp/restore && tar xf /tmp/restore.tar -C /tmp/restore
-
-# 2. Stop the app containers (keep mysql up):
-docker compose -f /opt/blog/docker-compose.yml stop ghost remark42
-
-# 3. Restore the database:
-gunzip -c /tmp/restore/ghost-db.sql.gz | \
-  docker compose -f /opt/blog/docker-compose.yml exec -T mysql \
-  mysql -uroot -p"$MYSQL_ROOT_PASSWORD" ghost
-
-# 4. Restore the volumes:
-docker run --rm -v blog_ghost_content:/data -v /tmp/restore:/in alpine \
-  sh -c 'rm -rf /data/* && tar xzf /in/ghost-content.tar.gz -C /data'
-docker run --rm -v blog_remark42_data:/data -v /tmp/restore:/in alpine \
-  sh -c 'rm -rf /data/* && tar xzf /in/remark42-data.tar.gz -C /data'
-
-# 5. Bring the app back:
-docker compose -f /opt/blog/docker-compose.yml up -d ghost remark42
-rm -rf /tmp/restore /tmp/restore.tar
+ssh root@$BOX '/opt/blog/restore.sh'
 ```
 
 After restore: posts, images, comments, and the active `source-custom` theme all
