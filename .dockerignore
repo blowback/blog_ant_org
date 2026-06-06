@@ -2,3 +2,4 @@
 *
 !theme
 !theme/**
+!docker-entrypoint-custom.sh
