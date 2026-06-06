@@ -60,14 +60,19 @@ if [ -z "$backup" ]; then
   echo "Latest backup: $backup"
 fi
 
-# Confirm (read from the terminal even if stdin is piped)
+# Confirm before destructive action
 if ! $assume_yes; then
   echo
   echo "About to restore: $backup"
   echo "This will OVERWRITE the current database, uploaded images, and comments."
-  printf "Type 'yes' to continue: "
-  read -r ans < /dev/tty
-  [ "$ans" = "yes" ] || { echo "Aborted."; exit 1; }
+  if [ -t 0 ]; then
+    printf "Type 'yes' to continue: "
+    read -r ans
+    [ "$ans" = "yes" ] || { echo "Aborted."; exit 1; }
+  else
+    echo "Non-interactive shell: re-run with -y to confirm, or use 'ssh -t'." >&2
+    exit 1
+  fi
 fi
 
 work="$(mktemp -d)"
