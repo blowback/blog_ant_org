@@ -1,0 +1,16 @@
+# Secrets — terraform.tfvars holds your GitHub client secret, and state holds
+# the SES SMTP password, MySQL/Ghost/Remark passwords, etc. in plaintext.
+terraform.tfvars
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+# Terraform working dirs / lock noise
+.terraform/
+#.terraform.lock.hcl   # optional — see note below
+crash.log
+*.tfplan
+
+# Editor / OS cruft
+.DS_Store
+*.swp

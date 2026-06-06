@@ -1,0 +1,19 @@
+# Hetzner Cloud API token (or export HCLOUD_TOKEN instead and omit this).
+hcloud_token = "your-hetzner-cloud-api-token"
+
+# Domains
+blog_domain     = "blog.example.com"
+comments_domain = "comments.example.com"
+# email_domain  = "example.com"   # optional; defaults to blog_domain
+# mail_from     = "hello@example.com"   # optional; defaults to noreply@<email_domain>
+
+acme_email = "you@example.com"
+
+# SSH access — your public key contents and the IP allowed to SSH in.
+ssh_public_key  = "ssh-ed25519 AAAA... you@host"
+ssh_source_cidr = "203.0.113.4/32"
+
+# Optional overrides
+# aws_region  = "eu-west-2"   # London; eu-west-1 = Ireland
+# server_type = "cx22"        # 2 vCPU / 4 GB
+# location    = "fsn1"        # Falkenstein, DE

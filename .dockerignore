@@ -1,0 +1,4 @@
+# Only the theme goes into the image; keep everything else out of the build context
+*
+!theme
+!theme/**
