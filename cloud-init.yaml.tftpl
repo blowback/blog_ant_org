@@ -50,7 +50,7 @@ write_files:
           networks: [internal]
 
         ghost:
-          image: ghost:5-alpine
+          image: ghcr.io/blowback/blog_ant_org:latest
           restart: unless-stopped
           depends_on:
             mysql:
