@@ -21,8 +21,10 @@ runcmd:
   - cp /opt/blog/repo/deploy/docker-compose.yml /opt/blog/docker-compose.yml
   - cp /opt/blog/repo/deploy/Caddyfile         /opt/blog/Caddyfile
   - cp /opt/blog/repo/deploy/backup.sh         /opt/blog/backup.sh
+  - cp /opt/blog/repo/deploy/restore.sh         /opt/blog/restore.sh
   - cp /opt/blog/repo/deploy/blog-backup.cron  /etc/cron.d/blog-backup
   - chmod 0750 /opt/blog/backup.sh
+  - chmod 0750 /opt/blog/restore.sh
   - chmod 0644 /etc/cron.d/blog-backup
   - cd /opt/blog && docker compose up -d
   - systemctl enable --now cron
