@@ -35,6 +35,9 @@ bundle="blog-backup-$ts.tar"
 tar cf "$work/$bundle" -C "$work" ghost-db.sql.gz ghost-content.tar.gz remark42-data.tar.gz
 
 # Ship to S3
-aws s3 cp "$work/$bundle" "s3://$BACKUP_BUCKET/$bundle"
+docker run --rm \
+  -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_DEFAULT_REGION \
+  -v "$work":/work amazon/aws-cli \
+  s3 cp "/work/$bundle" "s3://$BACKUP_BUCKET/$bundle"
 
 echo "$(date -u +%FT%TZ) backup ok: $bundle ($(du -h "$work/$bundle" | cut -f1))"
