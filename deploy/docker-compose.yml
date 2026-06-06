@@ -1,0 +1,91 @@
+name: blog
+
+services:
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ghost
+      MYSQL_USER: ghost
+      MYSQL_PASSWORD: ${GHOST_DB_PASSWORD}
+    command:
+      - --innodb-buffer-pool-size=512M
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    networks: [internal]
+
+  ghost:
+    image: ghcr.io/blowback/blog_ant_org:latest
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      url: https://${BLOG_DOMAIN}
+      database__client: mysql
+      database__connection__host: mysql
+      database__connection__user: ghost
+      database__connection__password: ${GHOST_DB_PASSWORD}
+      database__connection__database: ghost
+      mail__transport: SMTP
+      mail__options__host: ${SMTP_HOST}
+      mail__options__port: "587"
+      mail__options__auth__user: ${SMTP_USER}
+      mail__options__auth__pass: ${SMTP_PASS}
+      mail__from: ${MAIL_FROM}
+    volumes:
+      - ghost_content:/var/lib/ghost/content
+    networks: [internal]
+
+  remark42:
+    image: umputun/remark42:latest
+    restart: unless-stopped
+    environment:
+      REMARK_URL: https://${COMMENTS_DOMAIN}
+      SITE: blog
+      SECRET: ${REMARK_SECRET}
+      STORE_BOLT_PATH: /srv/var/db
+      BACKUP_PATH: /srv/var/backup
+      EMOJI: "true"
+      AUTH_ANON: "false"
+      AUTH_GITHUB_CID: ${GH_CID}
+      AUTH_GITHUB_CSEC: ${GH_CSEC}
+      ADMIN_SHARED_ID: ${REMARK_ADMIN_ID}
+    volumes:
+      - remark42_data:/srv/var
+    networks: [internal]
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on: [ghost, remark42]
+    environment:
+      BLOG_DOMAIN: ${BLOG_DOMAIN}
+      COMMENTS_DOMAIN: ${COMMENTS_DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks: [internal]
+
+volumes:
+  mysql_data:
+  ghost_content:
+  remark42_data:
+  caddy_data:
+  caddy_config:
+
+networks:
+  internal:

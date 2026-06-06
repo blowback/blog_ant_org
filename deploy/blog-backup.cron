@@ -1,0 +1,1 @@
+30 3 * * * root /opt/blog/backup.sh >> /var/log/blog-backup.log 2>&1

@@ -84,3 +84,8 @@ variable "backup_retention_days" {
   type        = number
   default     = 30
 }
+variable "repo_url" {
+  description = "Public git URL of the blog repo, cloned onto the box at boot."
+  type        = string
+  default     = "https://github.com/blowback/blog_ant_org"
+}

@@ -1,0 +1,16 @@
+{
+	email {$ACME_EMAIL}
+}
+
+{$BLOG_DOMAIN} {
+	encode zstd gzip
+	request_body {
+		max_size 50MB
+	}
+	reverse_proxy ghost:2368
+}
+
+{$COMMENTS_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy remark42:8080
+}

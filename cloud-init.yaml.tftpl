@@ -1,159 +1,29 @@
 #cloud-config
-# NOTE: rendered by OpenTofu/Terraform templatefile().
-# - Tofu template variables use a single dollar-brace and are substituted now.
-# - docker-compose runtime variables use a double dollar sign so they survive
-#   into the rendered file for Docker to expand at runtime.
-# - Caddy's env syntax (brace then dollar) is left untouched.
+# Minimal cloud-init: NO multi-line content blocks, NO indent() calls.
+# - The only inline file is /opt/blog/.env, written via base64 (encoding: b64),
+#   so it has zero significant whitespace and cannot be broken by YAML/indent.
+# - Every other file (docker-compose.yml, Caddyfile, backup.sh, cron) lives in
+#   the public repo as a normal file and is git-cloned onto the box verbatim.
 package_update: true
-
 packages:
-  - aws_cli 
-  - cron 
+  - awscli
+  - cron
+  - git
 
 write_files:
   - path: /opt/blog/.env
     permissions: '0600'
-    content: |
-      BLOG_DOMAIN=${blog_domain}
-      COMMENTS_DOMAIN=${comments_domain}
-      ACME_EMAIL=${acme_email}
-      MYSQL_ROOT_PASSWORD=${mysql_root_password}
-      GHOST_DB_PASSWORD=${ghost_db_password}
-      REMARK_SECRET=${remark_secret}
-      SMTP_HOST=${smtp_host}
-      SMTP_USER=${smtp_user}
-      SMTP_PASS=${smtp_pass}
-      MAIL_FROM=${mail_from}
-      GH_CID=${gh_cid}
-      GH_CSEC=${gh_csec}
-      REMARK_ADMIN_ID=${remark_admin_id}
-      AWS_DEFAULT_REGION=${aws_region}
-
-  - path: /opt/blog/docker-compose.yml
-    permissions: '0644'
-    content: |
-      name: blog
-
-      services:
-        mysql:
-          image: mysql:8.0
-          restart: unless-stopped
-          environment:
-            MYSQL_ROOT_PASSWORD: $${MYSQL_ROOT_PASSWORD}
-            MYSQL_DATABASE: ghost
-            MYSQL_USER: ghost
-            MYSQL_PASSWORD: $${GHOST_DB_PASSWORD}
-          command:
-            - --innodb-buffer-pool-size=512M
-          volumes:
-            - mysql_data:/var/lib/mysql
-          healthcheck:
-            test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p$${MYSQL_ROOT_PASSWORD}"]
-            interval: 10s
-            timeout: 5s
-            retries: 12
-          networks: [internal]
-
-        ghost:
-          image: ghcr.io/blowback/blog_ant_org:latest
-          restart: unless-stopped
-          depends_on:
-            mysql:
-              condition: service_healthy
-          environment:
-            NODE_ENV: production
-            url: https://$${BLOG_DOMAIN}
-            database__client: mysql
-            database__connection__host: mysql
-            database__connection__user: ghost
-            database__connection__password: $${GHOST_DB_PASSWORD}
-            database__connection__database: ghost
-            mail__transport: SMTP
-            mail__options__host: $${SMTP_HOST}
-            mail__options__port: "587"
-            mail__options__auth__user: $${SMTP_USER}
-            mail__options__auth__pass: $${SMTP_PASS}
-            mail__from: $${MAIL_FROM}
-          volumes:
-            - ghost_content:/var/lib/ghost/content
-          networks: [internal]
-
-        remark42:
-          image: umputun/remark42:latest
-          restart: unless-stopped
-          environment:
-            REMARK_URL: https://$${COMMENTS_DOMAIN}
-            SITE: blog
-            SECRET: $${REMARK_SECRET}
-            STORE_BOLT_PATH: /srv/var/db
-            BACKUP_PATH: /srv/var/backup
-            EMOJI: "true"
-            AUTH_ANON: "false"
-            AUTH_GITHUB_CID: $${GH_CID}
-            AUTH_GITHUB_CSEC: $${GH_CSEC}
-            ADMIN_SHARED_ID: $${REMARK_ADMIN_ID}
-          volumes:
-            - remark42_data:/srv/var
-          networks: [internal]
-
-        caddy:
-          image: caddy:2-alpine
-          restart: unless-stopped
-          depends_on: [ghost, remark42]
-          environment:
-            BLOG_DOMAIN: $${BLOG_DOMAIN}
-            COMMENTS_DOMAIN: $${COMMENTS_DOMAIN}
-            ACME_EMAIL: $${ACME_EMAIL}
-          ports:
-            - "80:80"
-            - "443:443"
-            - "443:443/udp"
-          volumes:
-            - ./Caddyfile:/etc/caddy/Caddyfile:ro
-            - caddy_data:/data
-            - caddy_config:/config
-          networks: [internal]
-
-      volumes:
-        mysql_data:
-        ghost_content:
-        remark42_data:
-        caddy_data:
-        caddy_config:
-
-      networks:
-        internal:
-
-  - path: /opt/blog/Caddyfile
-    permissions: '0644'
-    content: |
-      {
-      	email {$ACME_EMAIL}
-      }
-
-      {$BLOG_DOMAIN} {
-      	encode zstd gzip
-      	request_body {
-      		max_size 50MB
-      	}
-      	reverse_proxy ghost:2368
-      }
-
-      {$COMMENTS_DOMAIN} {
-      	encode zstd gzip
-      	reverse_proxy remark42:8080
-      }
-  - path: /opt/blog/backup.sh
-      permissions: '0750'
-      content: |
-      ${indent(6, backup_script)}
-
-  - path: /etc/cron.d/blog-backup
-      permissions: '0644'
-      content: |
-      30 3 * * * root /opt/blog/backup.sh >> /var/log/blog-backup.log 2>&1
+    encoding: b64
+    content: ${base64encode(env_file)}
 
 runcmd:
   - curl -fsSL https://get.docker.com | sh
+  - git clone --depth 1 ${repo_url} /opt/blog/repo
+  - cp /opt/blog/repo/deploy/docker-compose.yml /opt/blog/docker-compose.yml
+  - cp /opt/blog/repo/deploy/Caddyfile         /opt/blog/Caddyfile
+  - cp /opt/blog/repo/deploy/backup.sh         /opt/blog/backup.sh
+  - cp /opt/blog/repo/deploy/blog-backup.cron  /etc/cron.d/blog-backup
+  - chmod 0750 /opt/blog/backup.sh
+  - chmod 0644 /etc/cron.d/blog-backup
   - cd /opt/blog && docker compose up -d
   - systemctl enable --now cron
