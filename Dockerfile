@@ -4,3 +4,5 @@ COPY docker-entrypoint-custom.sh /usr/local/bin/docker-entrypoint-custom.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint-custom.sh
 ENTRYPOINT ["docker-entrypoint-custom.sh"]
 CMD ["node", "current/index.js"]
+
+
