@@ -6,6 +6,10 @@
 # - Caddy's env syntax (brace then dollar) is left untouched.
 package_update: true
 
+packages:
+  - aws_cli 
+  - cron 
+
 write_files:
   - path: /opt/blog/.env
     permissions: '0600'
@@ -23,6 +27,7 @@ write_files:
       GH_CID=${gh_cid}
       GH_CSEC=${gh_csec}
       REMARK_ADMIN_ID=${remark_admin_id}
+      AWS_DEFAULT_REGION=${aws_region}
 
   - path: /opt/blog/docker-compose.yml
     permissions: '0644'
@@ -138,7 +143,17 @@ write_files:
       	encode zstd gzip
       	reverse_proxy remark42:8080
       }
+  - path: /opt/blog/backup.sh
+      permissions: '0750'
+      content: |
+      ${indent(6, backup_script)}
+
+  - path: /etc/cron.d/blog-backup
+      permissions: '0644'
+      content: |
+      30 3 * * * root /opt/blog/backup.sh >> /var/log/blog-backup.log 2>&1
 
 runcmd:
   - curl -fsSL https://get.docker.com | sh
   - cd /opt/blog && docker compose up -d
+  - systemctl enable --now cron

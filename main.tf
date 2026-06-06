@@ -16,6 +16,11 @@ locals {
     gh_cid              = var.gh_cid
     gh_csec             = var.gh_csec
     remark_admin_id     = var.remark_admin_id
+    aws_region          = var.aws_region
+    backup_bucket       = aws_s3_bucket.backups.id
+    backup_access_key_id     = aws_iam_access_key.backup.id
+    backup_secret_access_key = aws_iam_access_key.backup.secret
+    backup_script            = file("${path.module}/backup.sh")
   })
 }
 

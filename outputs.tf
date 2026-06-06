@@ -60,3 +60,7 @@ output "next_steps" {
     SMTP creds: terraform output -raw smtp_username / smtp_password
   EOT
 }
+
+output "backup_bucket" {
+  value = aws_s3_bucket.backups.id
+}

@@ -78,3 +78,9 @@ variable "remark_admin_id" {
   type        = string
   default     = ""
 }
+
+variable "backup_retention_days" {
+  description = "Days to keep backups in S3 before lifecycle expiry."
+  type        = number
+  default     = 30
+}
