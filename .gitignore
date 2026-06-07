@@ -14,3 +14,6 @@ crash.log
 # Editor / OS cruft
 .DS_Store
 *.swp
+
+# npm packages
+node_modules
