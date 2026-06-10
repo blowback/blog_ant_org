@@ -44,12 +44,6 @@
     </script>
 
     <link rel="stylesheet" href="{{asset "css/prism.css"}}">
-    <script src="{{asset "js/prism.js"}}"></script>
-    <script src="{{asset "js/prism-z80.js"}}"></script>
-    <script src="{{asset "js/prism-mbasic.js"}}"></script>
-    <script src="{{asset "js/prism-bbcbasic.js"}}"></script>
-    <script src="{{asset "js/prism-forth.js"}}"></script>
-    <script>Prism.highlightAll();</script>
 
     {{!-- This tag outputs all your advanced SEO meta, structured data, and other important settings, it should always be the last tag before the closing head tag --}}
     <link rel="preload" href="{{asset "fonts/bariol_regular-webfont.woff2"}}" as="font" type="font/woff2" crossorigin>
@@ -75,6 +69,15 @@
 
 {{!-- Scripts - handle responsive videos, infinite scroll, and navigation dropdowns --}}
 <script src="{{asset "built/source.js"}}"></script>
+
+{{!-- Prism syntax highlighting: core + custom grammars (z80, mbasic, BBC BASIC,
+Forth). Loaded after the content so highlightAll runs against the parsed DOM. --}}
+<script src="{{asset "js/prism.js"}}"></script>
+<script src="{{asset "js/prism-z80.js"}}"></script>
+<script src="{{asset "js/prism-mbasic.js"}}"></script>
+<script src="{{asset "js/prism-bbcbasic.js"}}"></script>
+<script src="{{asset "js/prism-forth.js"}}"></script>
+<script>Prism.highlightAll();</script>
 
 {{!-- Ghost outputs required functional scripts with this tag, it should always be the last thing before the closing body tag --}}
 {{ghost_foot}}

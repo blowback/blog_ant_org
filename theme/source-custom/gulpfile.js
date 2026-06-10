@@ -61,7 +61,11 @@ function js(done) {
         src([
             // pull in lib files first so our own code can depend on it
             'assets/js/lib/*.js',
-            'assets/js/*.js'
+            'assets/js/*.js',
+            // Prism + custom grammars are loaded directly in default.hbs;
+            // keep them out of the bundle so they aren't double-loaded or
+            // mangled by uglify.
+            '!assets/js/prism*.js'
         ], {sourcemaps: true}),
         concat('source.js'),
         uglify(),

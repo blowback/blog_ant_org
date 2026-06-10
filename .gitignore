@@ -17,3 +17,6 @@ crash.log
 
 # npm packages
 node_modules
+
+# Secrets (API keys for the Jekyll importer, etc.)
+*.keys
