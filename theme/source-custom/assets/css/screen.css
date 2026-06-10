@@ -3340,3 +3340,33 @@ body[class*=" gh-font-heading"]:not(.gh-font-heading-fira-sans):not(.gh-font-hea
 .pswp--minimal--dark .pswp__top-bar {
     background: none;
 }
+
+/* ----------------------------------------------------------
+   Page background: seamless tiled "tech scribble" texture,
+   faded to a subtle backdrop. Readable content stays on the
+   theme's solid surfaces (nav, footer, feed cards, article).
+   ---------------------------------------------------------- */
+html {
+    background-color: var(--background-color);
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.82)),
+        url("../images/tech_scribble.png");
+    background-repeat: no-repeat, repeat;
+    background-attachment: fixed, fixed;
+}
+
+/* Let the texture show through the viewport... */
+body {
+    background-color: transparent;
+}
+
+/* ...but keep the article reading column on a solid, centered panel so the
+   texture shows in the page gutters around it */
+.gh-article {
+    background-color: var(--background-color);
+    max-width: min(880px, 100% - 8vmin);
+    margin-inline: auto;
+    padding-block: clamp(24px, 5vmin, 56px);
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgb(0 0 0 / 0.07);
+}
