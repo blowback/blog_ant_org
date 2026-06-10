@@ -1,15 +1,16 @@
-{{!-- Sans-serif font is always loaded, because it's the default font for some part of the theme regardless of the settings --}}
-{{> "typography/sans"}}
+{{!-- Custom fonts: Bariol (headings) + IBM Plex Sans/Mono (body/code) --}}
+<link rel="preload" as="font" type="font/woff2" href="{{asset "fonts/bariol-bold.woff2"}}" crossorigin="anonymous">
+<link rel="preload" as="font" type="font/woff2" href="{{asset "fonts/ibm-plex-sans-400.woff2"}}" crossorigin="anonymous">
 
-{{#match @custom.title_font "Modern sans-serif"}}
-    {{#match @custom.body_font "Elegant serif"}}
-        {{> "typography/serif"}}
-    {{/match}}
-{{else match @custom.title_font "Elegant serif"}}
-    {{> "typography/serif"}}
-{{else}}
-    {{> "typography/mono"}}
-    {{#match @custom.body_font "Elegant serif"}}
-        {{> "typography/serif"}}
-    {{/match}}
-{{/match}}
+<style>
+  @font-face { font-family:'Bariol'; src:url({{asset "fonts/bariol-regular.woff2"}}) format('woff2'); font-weight:400; font-style:normal; font-display:swap; }
+  @font-face { font-family:'Bariol'; src:url({{asset "fonts/bariol-bold.woff2"}}) format('woff2'); font-weight:700; font-style:normal; font-display:swap; }
+
+  @font-face { font-family:'IBM Plex Sans'; src:url({{asset "fonts/ibm-plex-sans-400.woff2"}}) format('woff2'); font-weight:400; font-style:normal; font-display:swap; }
+  @font-face { font-family:'IBM Plex Sans'; src:url({{asset "fonts/ibm-plex-sans-500.woff2"}}) format('woff2'); font-weight:500; font-style:normal; font-display:swap; }
+  @font-face { font-family:'IBM Plex Sans'; src:url({{asset "fonts/ibm-plex-sans-700.woff2"}}) format('woff2'); font-weight:700; font-style:normal; font-display:swap; }
+  @font-face { font-family:'IBM Plex Sans'; src:url({{asset "fonts/ibm-plex-sans-400-italic.woff2"}}) format('woff2'); font-weight:400; font-style:italic; font-display:swap; }
+
+  @font-face { font-family:'IBM Plex Mono'; src:url({{asset "fonts/ibm-plex-mono-400.woff2"}}) format('woff2'); font-weight:400; font-style:normal; font-display:swap; }
+  @font-face { font-family:'IBM Plex Mono'; src:url({{asset "fonts/ibm-plex-mono-500.woff2"}}) format('woff2'); font-weight:500; font-style:normal; font-display:swap; }
+</style>
