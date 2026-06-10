@@ -3370,3 +3370,33 @@ body {
     border-radius: 12px;
     box-shadow: 0 2px 12px rgb(0 0 0 / 0.07);
 }
+
+/* Feed snippets sit on their own off-white cards so the texture doesn't
+   bleed through the post blurbs on listing pages (home, tag, author). */
+.gh-feed .gh-card {
+    background-color: var(--background-color);
+    border-radius: 12px;
+    box-shadow: 0 1px 8px rgb(0 0 0 / 0.07);
+    padding: 20px;
+}
+
+/* Replace the divider lines between snippets with spacing between cards */
+.gh-feed .gh-card::before,
+.gh-feed .gh-card::after {
+    display: none;
+}
+
+.gh-container.is-list .gh-feed {
+    gap: var(--grid-gap);
+}
+
+.gh-container.is-grid .gh-feed {
+    column-gap: var(--grid-gap);
+    overflow: visible;
+}
+
+/* Round the snippet thumbnail to match the card */
+.gh-feed .gh-card-image {
+    border-radius: 8px;
+    overflow: hidden;
+}
