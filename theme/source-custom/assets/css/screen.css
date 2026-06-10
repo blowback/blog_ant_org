@@ -3350,7 +3350,7 @@ html {
     background-color: var(--background-color);
     background-image:
         linear-gradient(rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.82)),
-        url("../images/tech_scribble.png");
+        url("../images/tech_scribble2.png");
     background-repeat: no-repeat, repeat;
     background-attachment: fixed, fixed;
 }
