@@ -22,6 +22,11 @@
             figure.innerHTML = '';
             figure.appendChild(img);
             figure.hidden = false;
+
+            // {{post_class}} tags every feature-image-less post with `no-image`,
+            // which makes the theme apply its imageless card layout. We now have
+            // an image, so drop it and let the card style like any image card.
+            if (card) { card.classList.remove('no-image'); }
         } else {
             // No image anywhere in the post → render the card without a thumbnail
             if (card) { card.classList.add('no-image'); }
