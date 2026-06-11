@@ -15,6 +15,16 @@
                     {{#if lazyLoad}}loading="lazy"{{/if}}
                 >
             </figure>
+        {{else}}
+            {{#if @custom.show_images_in_feed}}
+                {{!-- No feature image: fall back to the first image in the post
+                     body. The content is rendered into an inert <template> (its
+                     images don't load, scripts don't run); card-fallback-image.js
+                     pulls out the first <img>, or removes the figure if none. --}}
+                <figure class="gh-card-image gh-card-image-fallback" hidden>
+                    <template>{{content}}</template>
+                </figure>
+            {{/if}}
         {{/if}}
         <div class="gh-card-wrapper">
             {{#if primary_tag}}

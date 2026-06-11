@@ -3400,3 +3400,9 @@ body {
     border-radius: 8px;
     overflow: hidden;
 }
+
+/* The content-image fallback figure stays hidden until the script resolves
+   it (finds a content image and reveals it, or removes the figure) */
+.gh-card-image-fallback[hidden] {
+    display: none;
+}
