@@ -3406,3 +3406,14 @@ body {
 .gh-card-image-fallback[hidden] {
     display: none;
 }
+
+/* The stock theme only switches the heading font for .is-title and content
+   h2/h3, so an inline h1 (or h4–h6) in a page/post body falls back to the
+   body font. Apply the chosen title font to every content heading level. */
+.has-serif-title .gh-content :is(h1, h2, h3, h4, h5, h6) {
+    font-family: var(--gh-font-heading, var(--font-serif));
+}
+
+.has-mono-title .gh-content :is(h1, h2, h3, h4, h5, h6) {
+    font-family: var(--gh-font-heading, var(--font-mono));
+}
