@@ -1,0 +1,66 @@
+{{!< default}}
+{{!-- The "Beast User" magazine hub.
+
+     Ghost auto-applies this template to the page whose slug is `beast-user`
+     (page-{slug}.hbs), so no routes.yaml entry is needed — just create and
+     publish that page in admin. Its title / excerpt / feature image / body
+     become the masthead; the curated grids below are maintained here in the
+     repo (curation is structural and travels with the routes.yaml channels).
+
+     To add a series: 1) add its channel block to routes.yaml, 2) create its
+     masthead page, 3) copy a {{#get "pages"}} block below pointing at the new
+     channel URL and page slug.
+     To feature a standalone article: tag it with the internal #beast-user tag
+     and it appears in the "Articles" grid automatically. --}}
+
+{{#post}}
+<main class="gh-main">
+
+    <article class="gh-article {{post_class}}">
+        <header class="gh-article-header gh-canvas">
+            <h1 class="gh-article-title is-title">{{title}}</h1>
+            {{#if custom_excerpt}}
+                <p class="gh-article-excerpt is-body">{{custom_excerpt}}</p>
+            {{/if}}
+            {{> "feature-image"}}
+        </header>
+
+        {{#if content}}
+            <section class="gh-content gh-canvas is-body">
+                {{content}}
+            </section>
+        {{/if}}
+    </article>
+
+    {{!-- Tutorial series --}}
+    <section class="gh-container is-grid no-image gh-outer">
+        <div class="gh-container-inner gh-inner">
+            <h2 class="gh-container-title">Tutorial series</h2>
+            <div class="gh-feed">
+                {{#get "pages" filter="slug:your-name-in-lights" limit="1"}}
+                    {{#foreach pages}}
+                        {{> "components/series-card" url="/beast-user/your-name-in-lights/"}}
+                    {{/foreach}}
+                {{/get}}
+            </div>
+        </div>
+    </section>
+
+    {{!-- Standalone articles: any post tagged with the internal #beast-user tag --}}
+    {{#get "posts" filter="tag:hash-beast-user" include="authors" order="published_at desc" limit="all" as |articles|}}
+        {{#if articles}}
+            <section class="gh-container is-grid no-image gh-outer">
+                <div class="gh-container-inner gh-inner">
+                    <h2 class="gh-container-title">Articles</h2>
+                    <div class="gh-feed">
+                        {{#foreach articles}}
+                            {{> "post-card" lazyLoad=true}}
+                        {{/foreach}}
+                    </div>
+                </div>
+            </section>
+        {{/if}}
+    {{/get}}
+
+</main>
+{{/post}}
