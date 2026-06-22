@@ -1,0 +1,25 @@
+routes:
+
+  # --- Beast User magazine: tutorial-series channels ---
+  # Each series is a channel (filtered, paginated view) so its posts ALSO stay
+  # in the main blog feed. `controller: channel` provides the paginated `posts`
+  # + link[rel=next] for infinite scroll. `order: published_at asc` shows the
+  # series oldest-first. `filter` targets the series' internal #tag (the "#"
+  # becomes "hash-" in the slug). `data` binds an editable page for the masthead
+  # (title/intro/hero) — that page must exist and be published, or the route
+  # 404s. To add a series: copy a block, change the URL, filter, and page slug.
+  /beast-user/your-name-in-lights/:
+    controller: channel
+    filter: tag:hash-your-name-in-lights
+    order: published_at asc
+    template: channel-series
+    data: page.your-name-in-lights
+
+collections:
+  /:
+    permalink: /{slug}/
+    template: index
+
+taxonomies:
+  tag: /tag/{slug}/
+  author: /author/{slug}/

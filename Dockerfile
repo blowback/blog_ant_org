@@ -13,6 +13,9 @@ RUN npm install --legacy-peer-deps --no-audit --no-fund \
 # ---- Stage 2: Ghost image with the compiled theme ----
 FROM ghost:5-alpine
 COPY --from=theme-builder /theme /var/lib/ghost/current/content/themes/source-custom
+# Stage routes.yaml outside the content volume; the custom entrypoint copies it
+# into content/settings on every boot so the repo stays the source of truth.
+COPY routes.yaml /var/lib/ghost/current/content/settings/routes.yaml
 COPY docker-entrypoint-custom.sh /usr/local/bin/docker-entrypoint-custom.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint-custom.sh
 ENTRYPOINT ["docker-entrypoint-custom.sh"]

@@ -1,0 +1,28 @@
+{{!< default}}
+{{!-- Reusable channel template for a "Beast User" tutorial series.
+
+     A channel route in routes.yaml supplies `posts` already filtered to the
+     series (by its internal #tag) and ordered oldest-first. The masthead is
+     driven by an editable page bound with `data: page.<slug>` in the same
+     route, so the series title / intro / hero all come from Ghost admin and
+     this one template can serve every series. --}}
+
+<main class="gh-main gh-outer">
+
+    {{#page}}
+        <section class="gh-archive{{#if feature_image}} has-image{{/if}} gh-inner">
+            <div class="gh-archive-inner">
+                <header class="gh-archive-wrapper">
+                    <h1 class="gh-article-title is-title">{{title}}</h1>
+                    {{#if custom_excerpt}}
+                        <p class="gh-article-excerpt">{{custom_excerpt}}</p>
+                    {{/if}}
+                </header>
+                {{> "feature-image"}}
+            </div>
+        </section>
+    {{/page}}
+
+    {{> "components/post-list" feed="archive" postFeedStyle=@custom.post_feed_style showTitle=false showSidebar=false}}
+
+</main>
