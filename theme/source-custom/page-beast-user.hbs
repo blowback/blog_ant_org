@@ -7,6 +7,12 @@
      become the masthead; the curated grids below are maintained here in the
      repo (curation is structural and travels with the routes.yaml channels).
 
+     Two editorial slots:
+       * TOP    — the body of this `beast-user` page, rendered above the grids.
+       * BOTTOM — the body of an optional second page with slug
+                  `beast-user-outro`, rendered below the grids. Create + publish
+                  that page in admin to use it; leave it absent to skip it.
+
      To add a series: 1) add its channel block to routes.yaml, 2) create its
      masthead page, 3) copy a {{#get "pages"}} block below pointing at the new
      channel URL and page slug.
@@ -25,6 +31,7 @@
             {{> "feature-image"}}
         </header>
 
+        {{!-- TOP editorial slot: this page's own body --}}
         {{#if content}}
             <section class="gh-content gh-canvas is-body">
                 {{content}}
@@ -60,6 +67,19 @@
                 </div>
             </section>
         {{/if}}
+    {{/get}}
+
+    {{!-- BOTTOM editorial slot: body of the optional `beast-user-outro` page --}}
+    {{#get "pages" filter="slug:beast-user-outro" limit="1"}}
+        {{#foreach pages}}
+            {{#if content}}
+                <article class="gh-article">
+                    <section class="gh-content gh-canvas is-body">
+                        {{content}}
+                    </section>
+                </article>
+            {{/if}}
+        {{/foreach}}
     {{/get}}
 
 </main>
