@@ -6,6 +6,8 @@ on:
     paths:
       - 'Dockerfile'
       - 'theme/**'
+      - 'routes.yaml'
+      - 'docker-entrypoint-custom.sh'
       - '.github/workflows/docker.yml'
 
 permissions:
