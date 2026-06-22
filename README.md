@@ -142,6 +142,63 @@ To force an image rebuild without a code change (e.g. for a fresh `ghost:5-alpin
 base), add `workflow_dispatch:` to the workflow's `on:` block and use the
 "Run workflow" button in the Actions tab.
 
+### Add to the Beast User magazine
+
+The Beast User hub lives at [`/beast-user/`](https://blog.ant.org/beast-user/) — a
+page (slug `beast-user`) rendered by the custom `page-beast-user.hbs` template. It
+shows the page's own body (top editorial slot), a grid of **tutorial-series**
+cards, a grid of stand-alone **articles**, then the body of the `beast-user-outro`
+page (bottom editorial slot). Two ways to add to it:
+
+**i) A new tutorial series** (e.g. "Your name in lights"). A series is a Ghost
+[*channel*](https://ghost.org/docs/themes/routing/#channels): a filtered, ordered
+view whose posts **also** stay in the main blog feed. Pick a slug, e.g.
+`your-name-in-lights`, and use it consistently below.
+
+1. **In Ghost admin (content):** create and **publish** a page with that slug. Its
+   Title, Excerpt, and Feature image become the series' masthead *and* its hub card.
+   *Must be published* — `{{#get "pages"}}` and the channel's `data` binding both
+   silently skip drafts.
+2. **In Ghost admin (content):** tag every post in the series with the internal tag
+   `#your-name-in-lights`. The leading `#` makes it internal — hidden from the public
+   tag UI but still filterable. Ghost stores its slug as `hash-your-name-in-lights`.
+3. **In the repo:** add a channel block to `routes.yaml`:
+   ```yaml
+     /beast-user/your-name-in-lights/:
+       controller: channel
+       filter: tag:hash-your-name-in-lights   # the #tag's slug
+       order: published_at asc                # oldest-first, not reverse-chron
+       template: channel-series
+       data: page.your-name-in-lights         # masthead; must be published
+   ```
+4. **In the repo:** add a card to the "Tutorial series" grid in
+   `theme/source-custom/page-beast-user.hbs` (the `url` is the channel, *not* the
+   page's own URL):
+   ```hbs
+   {{#get "pages" filter="slug:your-name-in-lights" limit="1"}}
+       {{#foreach pages}}
+           {{> "components/series-card" url="/beast-user/your-name-in-lights/"}}
+       {{/foreach}}
+   {{/get}}
+   ```
+5. **Deploy** (steps 3–4 are theme/routes changes, so it's the image pipeline):
+   ```bash
+   git add routes.yaml theme/ && git commit -m "beast-user: add <series>" && git push
+   # wait for green Actions build, then pull on the box:
+   ssh root@$BOX 'cd /opt/blog && docker compose pull ghost && docker compose up -d ghost'
+   ```
+   Verify `/beast-user/` shows the new card and `/beast-user/your-name-in-lights/`
+   lists the posts oldest-first.
+
+**ii) A new stand-alone article.** No repo change, no deploy — it's content-only:
+
+1. Write and publish the post as normal.
+2. Add the internal tag `#beast-user`.
+
+It appears automatically in the hub's "Articles" grid (newest-first). That's the
+whole difference: a *series* is repo + content + deploy; a *stand-alone article* is
+just a tag.
+
 ### Change a deploy file (compose / Caddyfile / backup / cron)
 
 These are cloned onto the box at boot — no image build involved.
