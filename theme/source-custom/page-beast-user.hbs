@@ -39,20 +39,6 @@
         {{/if}}
     </article>
 
-    {{!-- Tutorial series --}}
-    <section class="gh-container is-grid no-image gh-outer">
-        <div class="gh-container-inner gh-inner">
-            <h2 class="gh-container-title">Tutorial series</h2>
-            <div class="gh-feed">
-                {{#get "pages" filter="slug:your-name-in-lights" limit="1"}}
-                    {{#foreach pages}}
-                        {{> "components/series-card" url="/beast-user/your-name-in-lights/"}}
-                    {{/foreach}}
-                {{/get}}
-            </div>
-        </div>
-    </section>
-
     {{!-- Standalone articles: any post tagged with the internal #beast-user tag --}}
     {{#get "posts" filter="tag:hash-beast-user" include="authors" order="published_at desc" limit="all" as |articles|}}
         {{#if articles}}
@@ -68,6 +54,20 @@
             </section>
         {{/if}}
     {{/get}}
+
+    {{!-- Tutorial series --}}
+    <section class="gh-container is-grid no-image gh-outer">
+        <div class="gh-container-inner gh-inner">
+            <h2 class="gh-container-title">Tutorial series</h2>
+            <div class="gh-feed">
+                {{#get "pages" filter="slug:your-name-in-lights" limit="1"}}
+                    {{#foreach pages}}
+                        {{> "components/series-card" url="/beast-user/your-name-in-lights/"}}
+                    {{/foreach}}
+                {{/get}}
+            </div>
+        </div>
+    </section>
 
     {{!-- BOTTOM editorial slot: body of the optional `beast-user-outro` page --}}
     {{#get "pages" filter="slug:beast-user-outro" limit="1"}}
