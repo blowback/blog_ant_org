@@ -3417,3 +3417,10 @@ body {
 .has-mono-title .gh-content :is(h1, h2, h3, h4, h5, h6) {
     font-family: var(--gh-font-heading, var(--font-mono));
 }
+
+/* Beast User hub: the bottom editorial slot (beast-user-outro) follows the
+   Articles grid directly, so give it the same 64px top gap that separates the
+   page's other sections, instead of butting against the cards above. */
+.gh-beast-outro {
+    margin-top: 64px;
+}
