@@ -45,10 +45,12 @@
             <section class="gh-container is-grid no-image gh-outer">
                 <div class="gh-container-inner gh-inner">
                     <h2 class="gh-container-title">Articles</h2>
-                    <div class="gh-feed">
-                        {{#foreach articles}}
-                            {{> "post-card" lazyLoad=true}}
-                        {{/foreach}}
+                    <div class="gh-main">
+                        <div class="gh-feed">
+                            {{#foreach articles}}
+                                {{> "post-card" lazyLoad=true}}
+                            {{/foreach}}
+                        </div>
                     </div>
                 </div>
             </section>
@@ -59,12 +61,14 @@
     <section class="gh-container is-grid no-image gh-outer">
         <div class="gh-container-inner gh-inner">
             <h2 class="gh-container-title">Tutorial series</h2>
-            <div class="gh-feed">
-                {{#get "pages" filter="slug:your-name-in-lights" limit="1"}}
-                    {{#foreach pages}}
-                        {{> "components/series-card" url="/beast-user/your-name-in-lights/"}}
-                    {{/foreach}}
-                {{/get}}
+            <div class="gh-main">
+                <div class="gh-feed">
+                    {{#get "pages" filter="slug:your-name-in-lights" limit="1"}}
+                        {{#foreach pages}}
+                            {{> "components/series-card" url="/beast-user/your-name-in-lights/"}}
+                        {{/foreach}}
+                    {{/get}}
+                </div>
             </div>
         </div>
     </section>
