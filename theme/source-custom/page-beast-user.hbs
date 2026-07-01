@@ -69,6 +69,13 @@
                         {{/foreach}}
                     {{/get}}
                 </div>
+                <div class="gh-feed">
+                    {{#get "pages" filter="slug:build-a-traffic-light" limit="1"}}
+                        {{#foreach pages}}
+                            {{> "components/series-card" url="/beast-user/build-a-traffic-light/"}}
+                        {{/foreach}}
+                    {{/get}}
+                </div>
             </div>
         </div>
     </section>

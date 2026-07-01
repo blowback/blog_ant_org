@@ -14,6 +14,12 @@ routes:
     order: published_at asc
     template: channel-series
     data: page.your-name-in-lights
+  /beast-user/build-a-traffic-light/:
+    controller: channel
+    filter: tag:hash-build-a-traffic-light   # the #tag's slug
+    order: published_at asc                # oldest-first, not reverse-chron
+    template: channel-series
+    data: page.build-a-traffic-light         # masthead; must be published
 
 collections:
   /:
