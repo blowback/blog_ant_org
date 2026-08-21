@@ -73,6 +73,11 @@
                             {{> "components/series-card" url="/beast-user/build-a-traffic-light/"}}
                         {{/foreach}}
                     {{/get}}
+                    {{#get "pages" filter="slug:build-your-own-joystick-interface" limit="1"}}
+                        {{#foreach pages}}
+                            {{> "components/series-card" url="/beast-user/build-your-own-joystick-interface/"}}
+                        {{/foreach}}
+                    {{/get}}
                 </div>
             </div>
         </div>

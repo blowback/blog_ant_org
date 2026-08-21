@@ -20,6 +20,18 @@ routes:
     order: published_at asc                # oldest-first, not reverse-chron
     template: channel-series
     data: page.build-a-traffic-light         # masthead; must be published
+  /beast-user/build-your-own-joystick-interface/:
+    controller: channel
+    filter: tag:hash-build-your-own-joystick-interface   # the #tag's slug
+    order: published_at asc                # oldest-first, not reverse-chron
+    template: channel-series
+    data: page.build-your-own-joystick-interface         # masthead; must be published
+  /beast-user/build-your-own-soundcard/:
+    controller: channel
+    filter: tag:hash-build-your-own-soundcard   # the #tag's slug
+    order: published_at asc                # oldest-first, not reverse-chron
+    template: channel-series
+    data: page.build-your-own-soundcard         # masthead; must be published
 
 collections:
   /:
